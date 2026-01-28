@@ -346,6 +346,7 @@ Contributions are welcome! Please submit pull requests or issues through the Git
 - **English Quick Start Guide**: [RD-03D Quick Start Guide](./docs/Rd-03D_V2quick_start_guide-en.pdf)
 - [Influencing Source 1](https://github.com/heronet/esp_rd-03d/tree/master)
 - [Influencing Source 2](https://github.com/Gjorgjevikj/HLK_LD2410/tree/master)
+- [Reference Implementation](https://github.com/skoona/HumanRadar_M5Stack)
 
 
 ## License
