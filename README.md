@@ -29,6 +29,20 @@ A comprehensive ESP-IDF component for interfacing with the AI-Thinker RD-03D rad
 ### Initialization
 
 ```c
+#include <math.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include "driver/gpio.h"
+#include "driver/ledc.h"
+#include "esp_log.h"
+#include "esp_system.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/idf_additions.h"
+#include "freertos/projdefs.h"
+#include "freertos/task.h"
 #include "humanRadarRD_03D.h"
 
 
