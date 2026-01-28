@@ -1,0 +1,9 @@
+dependencies:
+  idf: '>=5.0'
+description: ESP-IDF component for RD-03D mmWave Radar Sensor
+license: MIT
+url: https://github.com/skoona/humanRadarRD_03D
+version: 1.0.0
+maintainers:
+  - skoona@gmail.com
+

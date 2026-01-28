@@ -1,0 +1,50 @@
+mainmenu "RD-03D mmWave Radar Sensor"
+    menu "RD-03D mmWave Radar Sensor Device Configuration"
+        config UART_PORT
+            int "UART Port"
+            default 2
+            help
+                UART Port 0, 1, or 2 connected to RD-03D module.
+
+        config UART_RX_GPIO
+            int "UART RX GPIO"
+            default 39
+            help
+                GPIO number for UART RX.
+
+        config UART_TX_GPIO
+            int "UART TX GPIO"
+            default 38
+            help
+                GPIO number for UART TX.
+
+        config UART_MULTI_TARGET_MODE
+            bool "Track up to three Targets, defaults to single target mode"
+            default false
+            help
+                Enable tracking of up to three targets simultaneously if selected.
+
+        choice UART_BAUD_RATE_CHOICE
+            prompt "UART Baud Rate"
+            default UART_BAUD_256000
+            help
+                Select the desired baud rate for the UART communication.
+
+            config UART_BAUD_57600
+                bool "57600"
+            config UART_BAUD_115200
+                bool "115200"
+            config UART_BAUD_256000
+                bool "256000"
+            config UART_BAUD_460800
+                bool "460800"
+        endchoice
+
+        config UART_SPEED_BPS
+            int
+            default 57600 if UART_BAUD_57600
+            default 115200 if UART_BAUD_115200
+            default 256000 if UART_BAUD_256000
+            default 460800 if UART_BAUD_460800
+
+    endmenu
