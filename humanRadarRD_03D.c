@@ -366,7 +366,7 @@ esp_err_t radar_sensor_begin(radar_sensor_t *sensor, uint32_t baud_rate)
     }
 
     if (CONFIG_UART_MULTI_TARGET_MODE) {
-        radar_sensor_set_multi_target_mode(&radar, true);
+        radar_sensor_set_multi_target_mode(sensor, true);
     }
 
     return ESP_OK;
@@ -953,7 +953,7 @@ esp_err_t radar_sensor_get_firmware_version(radar_sensor_t *sensor, char *outVer
 	sprintf(outVersionString, "%d.%d.%ld", ackFrame->major, ackFrame->minor,
 			(ackFrame->bugfix >= 32768 ? -1 : ackFrame->bugfix));
 
-	ESP_LOGI("mmWave", outVersionString);
+	ESP_LOGI("mmWave", "%s", outVersionString);
     
 	return ESP_OK;
 }
