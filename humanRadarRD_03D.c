@@ -365,6 +365,10 @@ esp_err_t radar_sensor_begin(radar_sensor_t *sensor, uint32_t baud_rate)
         return ret;
     }
 
+    if (CONFIG_UART_MULTI_TARGET_MODE) {
+        radar_sensor_set_multi_target_mode(&radar, true);
+    }
+
     return ESP_OK;
 }
 

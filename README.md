@@ -87,6 +87,13 @@ void app_main() {
 
 ## API Reference
 - skdconfig menu section: **RD-03D mmWave Radar Sensor**
+- - CONFIG_UART_PORT
+- - CONFIG_UART_RX_GPIO
+- - CONFIG_UART_TX_GPIO
+- - CONFIG_UART_MULTI_TARGET_MODE
+- - CONFIG_UART_BAUD_RATE_CHOICE
+- - - Warning default speed is 256K baud, call `radar_sensor_set_baud_rate()` yourself to change speed.
+
 
 ### Core Functions
 
