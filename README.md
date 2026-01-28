@@ -66,13 +66,13 @@ void app_main() {
     bool hasMoved = false;
     while (1) {
         if (radar_sensor_update(&radar)) {
-        	// Save previous state
+        	// Save prior state
 			memcpy(priorTargets, targets, sizeof(targets));
-
+            // Save current state
             target_count = radar_sensor_get_targets(&radar, targets);
-            hasMoved = radar_sensor_radar_sensor_hasTargetMoved(targets,priorTargets, idx);
             for (int idx = 0; idx < target_count; idx++)
             {
+                hasMoved = radar_sensor_radar_sensor_hasTargetMoved(targets,priorTargets, idx);
                 if (hasMoved) {
                     ESP_LOGI("RD-03D", "[%d]Target detected at (%.1f, %.1f) mm, distance: %.1f mm", idx, targets[idx].x, targets[idx].y, targets[idx].distance);
                     ESP_LOGI("RD-03D", "[%d]Position: %s", idx, targets[idx].position_description);
@@ -86,6 +86,7 @@ void app_main() {
 ```
 
 ## API Reference
+- skdconfig menu section: **RD-03D mmWave Radar Sensor**
 
 ### Core Functions
 
