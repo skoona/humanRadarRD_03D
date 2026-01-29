@@ -358,7 +358,7 @@ esp_err_t radar_sensor_begin(radar_sensor_t *sensor, uint32_t baud_rate)
     }
 
     // device buffer is typically 64 bytes
-    ret = uart_driver_install(sensor->uart_port, 1024,1024, 0, NULL, 0);
+    ret = uart_driver_install(sensor->uart_port, 1280,1024, 0, NULL, 0);
     if (ret != ESP_OK)
     {
         ESP_LOGE("mmWave", "Failed to install UART driver");
