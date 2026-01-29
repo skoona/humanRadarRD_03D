@@ -63,6 +63,6 @@ void app_main()
                 }
             }
         }
-        vTaskDelay(pdMS_TO_TICKS(250));
+        vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
