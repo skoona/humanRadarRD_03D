@@ -50,7 +50,7 @@ void app_main()
             memcpy(priorTargets, targets, sizeof(targets));
             // Save current state
             target_count = radar_sensor_get_targets(&radar, targets);
-            for (int idx = 0; idx < target_count; idx++)
+            for (int idx = 0; idx < RADAR_MAX_TARGETS; idx++)
             {
                 hasMoved = radar_sensor_hasTargetMoved(targets, priorTargets, idx);
                 if (hasMoved)
