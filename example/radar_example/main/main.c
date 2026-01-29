@@ -31,7 +31,9 @@ void app_main()
 
     // Configure radar
     radar_sensor_set_config_mode(&radar, true);
-        // radar_sensor_set_multi_target_mode(&radar, true);  see sdkconfig: auto if config'ed
+        if(CONFIG_UART_MULTI_TARGET_MODE) {
+            radar_sensor_set_multi_target_mode(&radar, true);  // see sdkconfig: auto if config'ed
+        }
         radar_sensor_set_retention_times(&radar, 10000, 500);
         radar_sensor_get_firmware_version(&radar, versionString);
         ESP_LOGI("Radar", "Radar Firmware Version: %s", versionString);

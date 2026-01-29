@@ -365,9 +365,11 @@ esp_err_t radar_sensor_begin(radar_sensor_t *sensor, uint32_t baud_rate)
         return ret;
     }
 
-    if (CONFIG_UART_MULTI_TARGET_MODE) {
-        radar_sensor_set_multi_target_mode(sensor, true);
-    }
+    // if (CONFIG_UART_MULTI_TARGET_MODE) {
+    //     ESP_ERROR_CHECK(radar_sensor_set_config_mode(sensor, true));
+    //     radar_sensor_set_multi_target_mode(sensor, true);
+    //     ESP_ERROR_CHECK(radar_sensor_set_config_mode(sensor, false));
+    // }
 
     return ESP_OK;
 }
@@ -927,7 +929,8 @@ esp_err_t radar_sensor_get_firmware_version(radar_sensor_t *sensor, char *outVer
 	}
 
 	bool was_in_config_mode = sensor->configMode;
-    if (!sensor->configMode) {
+    if (!was_in_config_mode)
+    {
         ESP_ERROR_CHECK(radar_sensor_set_config_mode(sensor, true));
     }
 
@@ -982,7 +985,7 @@ esp_err_t radar_sensor_set_baud_rate(radar_sensor_t *sensor, uint32_t baud_rate)
     }
 
     bool was_in_config_mode = sensor->configMode;
-    if (!sensor->configMode)
+    if (!was_in_config_mode)
     {
         ESP_ERROR_CHECK(radar_sensor_set_config_mode(sensor, true));
     }
@@ -1034,7 +1037,7 @@ esp_err_t radar_sensor_set_multi_target_mode(radar_sensor_t *sensor, bool enable
     }
 
     bool was_in_config_mode = sensor->configMode;
-    if (!sensor->configMode)
+    if (!was_in_config_mode)
     {
         ESP_ERROR_CHECK(radar_sensor_set_config_mode(sensor, true));
     }
