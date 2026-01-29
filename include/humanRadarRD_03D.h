@@ -31,6 +31,14 @@ typedef enum
     WAIT_00,
     RECEIVE_FRAME
 } radar_parser_state_t;
+typedef enum
+{
+    WAIT_FD,
+    WAIT_FC,
+    WAIT_FB,
+    WAIT_FA,
+    RECEIVE_ACK
+} radar_command_state_t;
 
 typedef struct
 {
@@ -68,6 +76,7 @@ typedef struct
     bool configMode; // operational mode config if true, normal operation if false
     bool multiTargetMode; // true = multi-target, false = single-target
     radar_parser_state_t parser_state;
+    radar_command_state_t command_state;
     radar_retention_t retention[RADAR_MAX_TARGETS]; // Target retention management
 } radar_sensor_t;
 

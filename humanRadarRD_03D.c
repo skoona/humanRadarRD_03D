@@ -365,6 +365,8 @@ esp_err_t radar_sensor_begin(radar_sensor_t *sensor, uint32_t baud_rate)
         return ret;
     }
 
+    vTaskDelay(pdMS_TO_TICKS(200));
+
     // if (CONFIG_UART_MULTI_TARGET_MODE) {
     //     ESP_ERROR_CHECK(radar_sensor_set_config_mode(sensor, true));
     //     radar_sensor_set_multi_target_mode(sensor, true);
@@ -798,37 +800,105 @@ void radar_sensor_deinit(radar_sensor_t *sensor)
 // ack_buffer_size should be at least expected ack frame size
 esp_err_t Read_Command_Ack(radar_sensor_t *sensor, uint8_t *ack_buffer, size_t ack_buffer_size)
 {
-    if (!sensor || !ack_buffer || ack_buffer_size < RADAR_ACK_SIZE)
+    if (!sensor || !ack_buffer || ack_buffer_size < 10)
     {
         return ESP_ERR_INVALID_ARG;
     }
 
-    size_t total_bytes_read = 0;
     TickType_t start_time = xTaskGetTickCount();
     const TickType_t timeout_ticks = pdMS_TO_TICKS(2000); // 2 second timeout
 
-    while (total_bytes_read < ack_buffer_size)
-    {
-        size_t bytes_read = uart_read_bytes(sensor->uart_port,
-                                            (uint8_t *)(ack_buffer + total_bytes_read),
-                                            ack_buffer_size - total_bytes_read,
-                                            pdMS_TO_TICKS(100)); // 100 ms per read
+    uint8_t byte_in;
+    int idx = 0;
+    bool allDone = false;
+    sensor->command_state = WAIT_FD;
+    while( idx < ack_buffer_size) {
 
-        if (bytes_read > 0)
+        while (uart_read_bytes(sensor->uart_port, &byte_in, 1, portMAX_DELAY) > 0)
         {
-            total_bytes_read += bytes_read;
+            printf("0x%X ", byte_in);
+            switch (sensor->command_state)
+            {
+            case WAIT_FD:
+                if (byte_in == 0xFD)
+                {
+                    sensor->command_state = WAIT_FC;
+                    idx = 0;
+                    ack_buffer[idx++] = byte_in;
+                }
+                break;
+
+            case WAIT_FC:
+                if (byte_in == 0xFC)
+                {
+                    sensor->command_state = WAIT_FB;
+                    ack_buffer[idx++] = byte_in;
+                }
+                else
+                {
+                    sensor->command_state = WAIT_FD;
+                }
+                break;
+
+            case WAIT_FB:
+                if (byte_in == 0xFB)
+                {
+                    sensor->command_state = WAIT_FA;
+                    ack_buffer[idx++] = byte_in;
+                }
+                else
+                {
+                    sensor->command_state = WAIT_FD;
+                }
+                break;
+
+            case WAIT_FA:
+                if (byte_in == 0xFA)
+                {
+                    ack_buffer[idx++] = byte_in;
+                    sensor->command_state = RECEIVE_ACK;
+                }
+                else
+                {
+                    sensor->command_state = WAIT_FD;
+                }
+                break;
+
+            case RECEIVE_ACK:
+                ack_buffer[idx++] = byte_in;
+                if (idx >= ack_buffer_size)
+                {
+                    // Check tail bytes
+                    idx = idx -1;
+                    if (ack_buffer[idx-1] == 0x02 && ack_buffer[idx] == 0x01)
+                    {
+                        allDone = true;
+                    }
+                    sensor->command_state = WAIT_FD;
+                }
+                break;
+            }
+            if(allDone) {
+                 break;
+            }
+
+            // Check for timeout
+            if ((xTaskGetTickCount() - start_time) > timeout_ticks)
+            {
+                ESP_LOGE("mmWave", "Timeout waiting for ACK");
+                ESP_LOG_BUFFER_HEX("Timeout", ack_buffer, idx);
+                return ESP_ERR_TIMEOUT;
+            }
         }
-
-        // Check for timeout
-        if ((xTaskGetTickCount() - start_time) > timeout_ticks)
+        if (allDone)
         {
-            ESP_LOGE("mmWave", "Timeout waiting for ACK");
-            return ESP_ERR_TIMEOUT;
+            break;
         }
     }
 
-    ESP_LOGI("mmWave", "Received ACK (%d bytes)", total_bytes_read);
-    ESP_LOG_BUFFER_HEX("UARTReceive", ack_buffer, total_bytes_read);
+    printf("\n");
+    ESP_LOGI("mmWave", "Received ACK (%d bytes)", idx);
+    ESP_LOG_BUFFER_HEX("UARTReceive", ack_buffer, idx);
     return ESP_OK;
 }
 
@@ -841,6 +911,7 @@ esp_err_t Send_Command(radar_sensor_t *sensor, uint8_t *cmd, size_t cmd_len, uin
     }
     
     uart_flush_input(CONFIG_UART_PORT); // Clear UART buffer before sending command
+    vTaskDelay(pdMS_TO_TICKS(500));
 
     int bytes_written = uart_write_bytes(sensor->uart_port, (const char *)cmd, cmd_len);
     if (bytes_written < 0) {
