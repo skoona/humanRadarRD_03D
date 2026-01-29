@@ -30,7 +30,7 @@ void app_main()
     }
 
     // Configure radar
-    radar_sensor_set_config_mode(&radar, true);
+    ESP_ERROR_CHECK(radar_sensor_set_config_mode(&radar, true));
         if(CONFIG_UART_MULTI_TARGET_MODE) {
             radar_sensor_set_multi_target_mode(&radar, true);  // see sdkconfig: auto if config'ed
         }
@@ -39,7 +39,7 @@ void app_main()
         ESP_LOGI("Radar", "Radar Firmware Version: %s", versionString);
     radar_sensor_set_config_mode(&radar, false);
 
-    ESP_LOGI("Radar", "Sensor is active, starting main loop.");
+    ESP_LOGI("Radar", "Starting main loop.");
 
     // Main loop
     int target_count = 0;
@@ -57,9 +57,9 @@ void app_main()
                 hasMoved = radar_sensor_hasTargetMoved(targets, priorTargets, idx);
                 if (hasMoved)
                 {
-                    ESP_LOGI("RD-03D", "[%d]Target detected at (%.1f, %.1f) mm, distance: %.1f mm", idx, targets[idx].x, targets[idx].y, targets[idx].distance);
-                    ESP_LOGI("RD-03D", "[%d]Position: %s", idx, targets[idx].position_description);
-                    ESP_LOGI("RD-03D", "[%d]Angle: %.1f degrees, Distance: %.1f mm, Speed: %.1f mm/s", idx, targets[idx].angle, targets[idx].distance, targets[idx].speed);
+                    ESP_LOGI("RD-03D", "[%d]:[%d] Target detected at (%.1f, %.1f) mm, distance: %.1f mm", idx, target_count, targets[idx].x, targets[idx].y, targets[idx].distance);
+                    ESP_LOGI("RD-03D", "[%d]:[%d] Position: %s", idx, target_count, targets[idx].position_description);
+                    ESP_LOGI("RD-03D", "[%d]:[%d] Angle: %.1f degrees, Distance: %.1f mm, Speed: %.1f mm/s", idx, target_count, targets[idx].angle, targets[idx].distance, targets[idx].speed);
                 }
             }
         }
