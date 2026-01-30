@@ -467,6 +467,7 @@ bool radar_sensor_update(radar_sensor_t *sensor)
 
     bool data_updated = false;
     uint8_t byte_in;
+    sensor->buffer_index = 0;
 
     while (uart_read_bytes(sensor->uart_port, &byte_in, 1, 0) > 0)
     {
@@ -525,6 +526,8 @@ bool radar_sensor_update(radar_sensor_t *sensor)
                     data_updated = radar_sensor_parse_data(sensor, sensor->buffer,
                                                            RADAR_FRAME_SIZE);
                 }
+                // ESP_LOGI("FrameReader", "Received FRAME (%d bytes)", sensor->buffer_index);
+                // ESP_LOG_BUFFER_HEX("FrameReader", sensor->buffer, sensor->buffer_index);
                 sensor->parser_state = WAIT_AA;
                 sensor->buffer_index = 0;
             }
