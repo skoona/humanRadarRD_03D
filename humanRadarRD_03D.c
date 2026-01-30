@@ -461,6 +461,7 @@ bool radar_sensor_update(radar_sensor_t *sensor)
 
     while (uart_read_bytes(sensor->uart_port, &byte_in, 1, 0) > 0)
     {
+        printf("0x%X ");
         switch (sensor->parser_state)
         {
         case WAIT_AA:
