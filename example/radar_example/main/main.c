@@ -30,14 +30,13 @@ void app_main()
     }
 
     // Configure radar
-    ESP_ERROR_CHECK(radar_sensor_set_config_mode(&radar, true));
-        if(CONFIG_UART_MULTI_TARGET_MODE) {
-            radar_sensor_set_multi_target_mode(&radar, true);  // see sdkconfig: auto if config'ed
-        }
+    // ESP_ERROR_CHECK(radar_sensor_set_config_mode(&radar, true));
+    if (radar_sensor_set_config_mode(&radar, true) == ESP_OK) {
         radar_sensor_set_retention_times(&radar, 10000, 500);
         radar_sensor_get_firmware_version(&radar, versionString);
         ESP_LOGI("Radar", "Radar Firmware Version: %s", versionString);
-    radar_sensor_set_config_mode(&radar, false);
+        radar_sensor_set_config_mode(&radar, false);
+    }
 
     ESP_LOGI("Radar", "Starting main loop.");
 
@@ -63,6 +62,6 @@ void app_main()
                 }
             }
         }
-        vTaskDelay(pdMS_TO_TICKS(150));
+        vTaskDelay(pdMS_TO_TICKS(120));
     }
 }
