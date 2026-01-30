@@ -331,6 +331,9 @@ switch (ret) {
 - Position descriptions are updated automatically when target data changes
 
 ## Troubleshooting
+> [!NOTE]
+> Failing commands only return status and not their success payload.
+
 
 ### No Target Detection
 
