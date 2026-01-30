@@ -515,7 +515,8 @@ bool radar_sensor_update(radar_sensor_t *sensor)
             break;
 
         case RECEIVE_FRAME:
-            sensor->buffer[sensor->buffer_index++] = byte_in;
+            sensor->buffer[sensor->buffer_index] = byte_in; // sensor->buffer_index++ may not be working
+            sensor->buffer_index = sensor->buffer_index + 1;
             if (sensor->buffer_index >= RADAR_FULL_FRAME_SIZE)
             {
                 // Check tail bytes
