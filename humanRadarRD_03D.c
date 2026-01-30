@@ -468,7 +468,7 @@ bool radar_sensor_update(radar_sensor_t *sensor)
     bool data_updated = false;
     uint8_t byte_in;
 
-    while (uart_read_bytes(sensor->uart_port, &byte_in, 1, portMAX_DELAY) > 0)
+    while (uart_read_bytes(sensor->uart_port, &byte_in, 1, 0) > 0)
     {
         // printf("0x%X ", byte_in);
         switch (sensor->parser_state)
