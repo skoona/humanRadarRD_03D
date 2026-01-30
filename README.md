@@ -332,7 +332,7 @@ switch (ret) {
 
 ## Troubleshooting
 > [!NOTE]
-> Failing commands only return status and not their success payload.
+> Failing commands only return status and not their success payload.  Also, several of the newer ESP32 chips do not provide 5V for the sensor, only input to chip.  This will make the sensor appear to be failing for lack of voltage!
 
 
 ### No Target Detection
