@@ -93,10 +93,10 @@ typedef struct
     uint16_t commandReply;
     uint16_t ackStatus;
 	uint16_t versionBytes; // version bytes length
-	uint16_t type;	 // firmware type
 	uint8_t  major;	 // major version of the radar firmware
 	uint8_t  minor;	 // minor version of the radar firmware
-	uint32_t bugfix; // bug fix version of the radar firmware
+	uint16_t bugfix; // bug fix version of the radar firmware
+	uint16_t type;	 // firmware type
 	FrameMarkerType trailer; // 04 03 02 01 0x01020304
 } ACKframeFirmwareVersion;
 
