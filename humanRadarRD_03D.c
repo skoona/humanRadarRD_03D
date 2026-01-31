@@ -32,23 +32,6 @@ typedef struct
 } REQframeCommand;
 typedef struct 
 {
-    FrameMarkerType header;  // FD FC FB FA == 0xfafbfcfd
-    uint16_t ifDataLength;   // 04 00 == 0x0004
-    uint16_t commandWord;    // FF 00 == 0x00ff
-    uint16_t commandValue;   // 01 00 == 0x0001
-    FrameMarkerType trailer; // 04 03 02 01 == 0x01020304
-} REQframeCommandWithValue;
-typedef struct 
-{
-    FrameMarkerType header;  // FD FC FB FA == 0xfafbfcfd
-    uint16_t ifDataLength;   // 08 00 == 0x0008
-    uint16_t commandWord;    // 07 00 == 0x0007
-    uint16_t commandPar;     // 0x0000 - 0x0004
-    uint32_t commandValue;   //
-    FrameMarkerType trailer; // 04 03 02 01 == 0x01020304
-} REQframeCommandValueWithPar;
-typedef struct 
-{
     FrameMarkerType header; // FD FC FB FA 0xfafbfcfd
     uint16_t ifDataLength;  // 04 00 == 0x0004
     uint16_t commandReply;
@@ -65,27 +48,10 @@ typedef struct
     uint16_t bufferSize;
     FrameMarkerType trailer; // 04 03 02 01 0x01020304
 } ACKframeCommandModeEnter;
-
-typedef struct 
-{
-    FrameMarkerType header;  // FD FC FB FA == 0xfafbfcfd
-    uint16_t ifDataLength;   // 08 00 == 0x0008
-    uint16_t commandWord;    // 12 00 == 0x0012 - SET_MODE
-    uint16_t parWord;        // 00 00 == 0x0000
-    uint32_t parValue;       // 0x00 / 0x04 / 0x64
-    FrameMarkerType trailer; // 04 03 02 01 == 0x01020304
-} REQframeSetSystemMode;
 /// <summary>
 /// struct representing the firmware version of the radar sensor (contains the
 /// firmware type, major, minor and bugfix parts of the version)
 /// </summary>
-// 0000 01 00 01000000
-typedef struct {
-    uint8_t minor;	 // minor version of the radar firmware
-	uint8_t major;	 // major version of the radar firmware
-	uint8_t bugfix;  // bug fix version of the radar firmware
-	uint32_t type;	 // firmware type
-} FirmwareVersion;
 typedef struct 
 {
     FrameMarkerType header; // FD FC FB FA 0xfafbfcfd
@@ -99,16 +65,6 @@ typedef struct
 	uint16_t bugfix;       // bug fix version of the radar firmware
 	FrameMarkerType trailer; // 04 03 02 01 0x01020304
 } ACKframeFirmwareVersion;
-
-typedef struct 
-{
-    FrameMarkerType header; // FD FC FB FA 0xfafbfcfd
-    uint16_t ifDataLength;  // 08 00 == 0x0008
-    uint16_t commandReply;  // FF 01 == 0x01ff
-    uint16_t ackStatus;     // 0 / 1
-    uint32_t parValue;
-    FrameMarkerType trailer; // 04 03 02 01 0x01020304
-} ACKframeParameter;
 
 #pragma pack(0)
 
