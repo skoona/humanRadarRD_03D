@@ -81,10 +81,10 @@ typedef struct
 /// </summary>
 // 0000 01 00 01000000
 typedef struct {
-	uint16_t type;	 // firmware type
-	uint8_t minor;	 // minor version of the radar firmware
+    uint8_t minor;	 // minor version of the radar firmware
 	uint8_t major;	 // major version of the radar firmware
-	uint32_t bugfix; // bug fix version of the radar firmware
+	uint8_t bugfix;  // bug fix version of the radar firmware
+	uint32_t type;	 // firmware type
 } FirmwareVersion;
 typedef struct 
 {
@@ -1042,8 +1042,7 @@ esp_err_t radar_sensor_get_firmware_version(radar_sensor_t *sensor, char *outVer
         return ESP_FAIL;
     }
 
-	sprintf(outVersionString, "%d.%d.%ld", ackFrame->major, ackFrame->minor,
-			(ackFrame->bugfix >= 32768 ? -1 : ackFrame->bugfix));
+	sprintf(outVersionString, "%d.%d.%d", ackFrame->major, ackFrame->minor,	ackFrame->bugfix);
 
 	ESP_LOGI("mmWave", "%s", outVersionString);
     
