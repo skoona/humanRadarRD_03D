@@ -93,10 +93,10 @@ typedef struct
     uint16_t commandReply;
     uint16_t ackStatus;
 	uint16_t versionBytes; // version bytes length
-	uint8_t  major;	 // major version of the radar firmware
-	uint8_t  minor;	 // minor version of the radar firmware
-	uint16_t bugfix; // bug fix version of the radar firmware
-	uint16_t type;	 // firmware type
+	uint16_t type;	       // firmware type
+	uint16_t major;	       // major version of the radar firmware
+	uint16_t minor;	       // minor version of the radar firmware
+	uint16_t bugfix;       // bug fix version of the radar firmware
 	FrameMarkerType trailer; // 04 03 02 01 0x01020304
 } ACKframeFirmwareVersion;
 
@@ -469,7 +469,7 @@ bool radar_sensor_update(radar_sensor_t *sensor)
     uint8_t byte_in;
     sensor->buffer_index = 0;
 
-    while (uart_read_bytes(sensor->uart_port, &byte_in, 1, 0) > 0)
+    while (uart_read_bytes(sensor->uart_port, &byte_in, 1, 0) > 0)  // sensor has 10HZ cycle and two 32 byte buffers
     {
         // printf("0x%X ", byte_in);
         switch (sensor->parser_state)
@@ -829,7 +829,7 @@ esp_err_t Read_Command_Ack(radar_sensor_t *sensor, uint8_t *ack_buffer, size_t a
     bool ackFound = false;
     sensor->command_state = WAIT_FD;
 
-    while (uart_read_bytes(sensor->uart_port, &byte_in, 1, portMAX_DELAY) > 0)
+    while (uart_read_bytes(sensor->uart_port, &byte_in, 1, pdMS_TO_TICKS(120)) > 0)
     {
         // printf("0x%X:%d ", byte_in,idx);
         switch (sensor->command_state)
@@ -1042,9 +1042,11 @@ esp_err_t radar_sensor_get_firmware_version(radar_sensor_t *sensor, char *outVer
         return ESP_FAIL;
     }
 
-	sprintf(outVersionString, "%d.%d.%d", ackFrame->major, ackFrame->minor,	ackFrame->bugfix);
+    // fd fc fb fa: 0e 00: 00 01: 00 00: 00 80: 00 00: 01 00: 00 00: 01 00: 04 03 02 01
 
-	ESP_LOGI("mmWave", "%s", outVersionString);
+        sprintf(outVersionString, "%d.%d.%d", ackFrame->major, ackFrame->minor, ackFrame->bugfix);
+
+    ESP_LOGI("mmWave", "%s", outVersionString);
     
 	return ESP_OK;
 }
